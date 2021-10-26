@@ -1,4 +1,4 @@
-package com.hmju.permissions
+package com.hmju.permissions.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
