@@ -1,12 +1,13 @@
 package com.hmju.permissions
 
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import com.hmju.permissions.model.PermissionsExtra
+import com.hmju.permissions.ui.PermissionsActivity
 
 /**
  * Description : 간단하게 권한에 대해 처리할수 있는 SimplePermissions Class
@@ -74,7 +75,7 @@ class SimplePermissions(private val context: Context) {
         )
 
         if (context is Activity) {
-            Intent(context,PermissionsActivity::class.java).apply {
+            Intent(context, PermissionsActivity::class.java).apply {
                 putExtra(ExtraCode.PERMISSIONS,requestPermissions)
                 context.startActivity(this)
             }

@@ -5,7 +5,7 @@
     <application android:allowBackup="false">
 
         <activity
-            android:name=".PermissionsActivity"
+            android:name=".ui.PermissionsActivity"
             android:launchMode="singleTask" />
 
     </application>
