@@ -65,29 +65,31 @@ class SimplePermissions(private val context: Context) {
         return this
     }
 
-    fun build() {
+    fun build(callback: (Boolean,Array<String>) -> Unit) {
         if (requestPermissions == null) {
             throw NullPointerException("권한은 필수 값입니다.")
         }
 
-        val extraData = PermissionsExtra(
-            this.requestPermissions!!
-        )
-
         if (context is Activity) {
+            LogD("Activity 입니다~")
             Intent(context, PermissionsActivity::class.java).apply {
                 putExtra(ExtraCode.PERMISSIONS,requestPermissions)
                 context.startActivity(this)
             }
+            val negativeList = ArrayList<String>()
             PermissionsActivity.listener = object : PermissionsListener {
                 override fun onResult(permissions: Map<String, Boolean>) {
                     LogD("Callback Result $permissions")
+                    for(key in permissions.keys) {
+                        if(permissions[key] == false) {
+                            negativeList.add(key)
+                        }
+                    }
+                    callback(negativeList.size == 0, negativeList.toTypedArray())
                 }
             }
-        } else if (context is Fragment) {
-
         } else {
-            throw IllegalArgumentException("Not Application Context.. Activity or Fragment Context ")
+            throw IllegalArgumentException("Not Application Context.. Activity Context ")
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.hmju.example
 
 import android.Manifest
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.widget.Button
 import com.hmju.permissions.SimplePermissions
 import com.hmju.permissions.model.PermissionsDialogUiModel
 import com.hmju.permissions.ui.PermissionsDialog
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +22,9 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.READ_PHONE_STATE,
                     Manifest.permission.CAMERA
                 )
-                .build()
+                .build { isAllGranted, negativePermissions ->
+                    Log.d("MainActivity", "모두 승인 $isAllGranted  거부된 권한 ${Arrays.deepToString(negativePermissions)}")
+                }
         }
 
         findViewById<Button>(R.id.button2).setOnClickListener {
@@ -35,6 +39,10 @@ class MainActivity : AppCompatActivity() {
                 .show {
                     Log.d("Permissions", "onClick $it")
                 }
+        }
+
+        findViewById<Button>(R.id.button3).setOnClickListener {
+            startActivity(Intent(this,ExampleActivity::class.java))
         }
     }
 }
