@@ -2,6 +2,7 @@ package com.hmju.permissions.model
 
 import android.view.View
 import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import com.hmju.permissions.extension.dp
 
@@ -11,21 +12,22 @@ import com.hmju.permissions.extension.dp
  * Created by hmju on 2021-10-26
  */
 data class PermissionsDialogUiModel(
-    val titleTopMargin: Int = 20.dp,
-    val titleSideMargin: Int = 20.dp,
-    @ColorRes val titleTxtColor: Int = android.R.color.black,
-    val contentsTopMargin: Int = 10.dp,
-    val contentsSideMargin: Int = 20.dp,
-    @ColorRes val contentsTxtColor: Int = android.R.color.black,
-    val dialogSideMargin: Float = 40F.dp,
-    val dialogCorner: Float = 20F.dp,
-    @DrawableRes val dialogBg: Int = View.NO_ID,
-    val buttonTopMargin : Int = 10.dp,
-    val buttonVerticalPadding: Int = 10.dp,
-    val buttonHorizontalPadding: Int = 10.dp,
-    val buttonCorner: Float = 0F.dp,
-    @ColorRes val buttonNegativeTxtColor: Int = android.R.color.white,
-    @ColorRes val buttonNegativeBgColor: Int = android.R.color.darker_gray,
-    @ColorRes val buttonPositiveTxtColor: Int = android.R.color.white,
-    @ColorRes val buttonPositiveBgColor: Int = android.R.color.holo_blue_light
+    var titleTopMargin: Int = 20.dp,
+    var titleSideMargin: Int = 20.dp,
+    @ColorRes var titleTxtColor: Int = android.R.color.black,
+    var titleTxtSize : Int = 20,
+    var contentsTopMargin: Int = 10.dp,
+    var contentsSideMargin: Int = 20.dp,
+    @ColorRes var contentsTxtColor: Int = android.R.color.black,
+    var contentsTxtSize : Int = 16,
+    @DrawableRes var dialogBg: Int = View.NO_ID,
+    var buttonTopMargin : Int = 10.dp,
+    var buttonVerticalPadding: Int = 10.dp,
+    var buttonHorizontalPadding: Int = 10.dp,
+    var buttonCorner: Float = 0F.dp,
+    var buttonTxtSize : Int = 14,
+    @ColorRes var buttonNegativeTxtColor: Int = android.R.color.white,
+    @ColorRes var buttonNegativeBgColor: Int = android.R.color.darker_gray,
+    @ColorRes var buttonPositiveTxtColor: Int = android.R.color.white,
+    @ColorRes var buttonPositiveBgColor: Int = android.R.color.holo_blue_light
 )
