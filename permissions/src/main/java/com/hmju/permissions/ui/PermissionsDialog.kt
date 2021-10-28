@@ -4,17 +4,15 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorRes
-import androidx.annotation.StringRes
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
@@ -30,8 +28,8 @@ import hmju.widget.view.CustomTextView
  * Created by hmju on 2021-10-25
  */
 class PermissionsDialog(
-        private val context: Context,
-        private val uiModel: PermissionsDialogUiModel = PermissionsDialogUiModel()
+	private val context: Context,
+	private val uiModel: PermissionsDialogUiModel
 ) {
 
     companion object {
@@ -52,35 +50,17 @@ class PermissionsDialog(
 
     /**
      * 제목 변경
-     * @param id Resource Id
-     */
-    fun setTitle(@StringRes id: Int): PermissionsDialog {
-        if (id == -1) return this
-        return setTitle(context.getString(id))
-    }
-
-    /**
-     * 제목 변경
      * @param text 변경하고 싶은 문자열
      */
     fun setTitle(text: String?): PermissionsDialog {
         if (!text.isNullOrEmpty()) {
             tvTitle.visibility = View.VISIBLE
             tvTitle.text = HtmlCompat.fromHtml(
-                    text.replace("\n", "<br>"),
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-            )
+				text.replace("\n", "<br>"),
+				HtmlCompat.FROM_HTML_MODE_LEGACY
+			)
         }
         return this
-    }
-
-    /**
-     * 내용 변경
-     * @param id Resource Id
-     */
-    fun setContents(@StringRes id: Int): PermissionsDialog {
-        if (id == -1) return this
-        return setContents(context.getString(id))
     }
 
     /**
@@ -91,20 +71,11 @@ class PermissionsDialog(
         if (!text.isNullOrEmpty()) {
             tvContents.visibility = View.VISIBLE
             tvContents.text = HtmlCompat.fromHtml(
-                    text.replace("\n", "<br>"),
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-            )
+				text.replace("\n", "<br>"),
+				HtmlCompat.FROM_HTML_MODE_LEGACY
+			)
         }
         return this
-    }
-
-    /**
-     * 확인 버튼 텍스트 변경
-     * @param id Resource Id
-     */
-    fun setPositiveButton(@StringRes id: Int): PermissionsDialog {
-        if (id == -1) return this
-        return setPositiveButton(context.getString(id))
     }
 
     /**
@@ -115,20 +86,11 @@ class PermissionsDialog(
         if (!text.isNullOrEmpty()) {
             tvPositive.visibility = View.VISIBLE
             tvPositive.text = HtmlCompat.fromHtml(
-                    text.replace("\n", "<br>"),
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-            )
+				text.replace("\n", "<br>"),
+				HtmlCompat.FROM_HTML_MODE_LEGACY
+			)
         }
         return this
-    }
-
-    /**
-     * 취소 버튼 텍스트 변경
-     * @param id Resource Id
-     */
-    fun setNegativeButton(@StringRes id: Int): PermissionsDialog {
-        if (id == -1) return this
-        return setNegativeButton(context.getString(id))
     }
 
     /**
@@ -139,9 +101,9 @@ class PermissionsDialog(
         if (!text.isNullOrEmpty()) {
             tvNegative.visibility = View.VISIBLE
             tvNegative.text = HtmlCompat.fromHtml(
-                    text.replace("\n", "<br>"),
-                    HtmlCompat.FROM_HTML_MODE_LEGACY
-            )
+				text.replace("\n", "<br>"),
+				HtmlCompat.FROM_HTML_MODE_LEGACY
+			)
         }
         return this
     }
@@ -168,34 +130,34 @@ class PermissionsDialog(
         }
 
         tvNegative.updatePadding(
-                uiModel.buttonHorizontalPadding,
-                uiModel.buttonVerticalPadding,
-                uiModel.buttonHorizontalPadding,
-                uiModel.buttonVerticalPadding
-        )
+			uiModel.buttonHorizontalPadding,
+			uiModel.buttonVerticalPadding,
+			uiModel.buttonHorizontalPadding,
+			uiModel.buttonVerticalPadding
+		)
         tvNegative.setEnableTxtColor(getColor(uiModel.buttonNegativeTxtColor))
         tvNegative.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uiModel.buttonTxtSize.toFloat())
         tvNegative.setEnableDrawable(
-                getColor(uiModel.buttonNegativeBgColor),
-                uiModel.buttonCorner,
-                View.NO_ID,
-                View.NO_ID
-        )
+			getColor(uiModel.buttonNegativeBgColor),
+			uiModel.buttonCorner,
+			View.NO_ID,
+			View.NO_ID
+		)
 
         tvPositive.updatePadding(
-                uiModel.buttonHorizontalPadding,
-                uiModel.buttonVerticalPadding,
-                uiModel.buttonHorizontalPadding,
-                uiModel.buttonVerticalPadding
-        )
+			uiModel.buttonHorizontalPadding,
+			uiModel.buttonVerticalPadding,
+			uiModel.buttonHorizontalPadding,
+			uiModel.buttonVerticalPadding
+		)
         tvPositive.setEnableTxtColor(getColor(uiModel.buttonPositiveTxtColor))
         tvPositive.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uiModel.buttonTxtSize.toFloat())
         tvPositive.setEnableDrawable(
-                getColor(uiModel.buttonPositiveBgColor),
-                uiModel.buttonCorner,
-                View.NO_ID,
-                View.NO_ID
-        )
+			getColor(uiModel.buttonPositiveBgColor),
+			uiModel.buttonCorner,
+			View.NO_ID,
+			View.NO_ID
+		)
     }
 
     /**
@@ -226,7 +188,12 @@ class PermissionsDialog(
         dialog = builder.create().apply {
             try {
                 if (uiModel.dialogBg == View.NO_ID) {
-                    window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+                    window?.setBackgroundDrawable(GradientDrawable(
+						GradientDrawable.Orientation.BL_TR,
+						intArrayOf(Color.WHITE, Color.WHITE)
+					).apply {
+						cornerRadius = uiModel.dialogCorner.toFloat()
+					})
                 } else {
                     window?.setBackgroundDrawableResource(uiModel.dialogBg)
                 }
