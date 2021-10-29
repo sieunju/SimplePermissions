@@ -1,11 +1,11 @@
 package com.hmju.permissions.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.hmju.permissions.ExtraCode
 import com.hmju.permissions.PermissionsListener
+import com.hmju.permissions.R
 
 /**
  * Description : 권한 Activity
@@ -15,26 +15,18 @@ import com.hmju.permissions.PermissionsListener
 class PermissionsActivity : AppCompatActivity() {
 
     companion object {
-        private const val TAG = "PermissionsActivity"
-        private const val DEBUG = true
-        fun LogD(msg: String) {
-            if (DEBUG) {
-                Log.d(TAG, msg)
-            }
-        }
-
         var listener: PermissionsListener? = null
     }
 
     private val permissionsResult = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
+            ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         finish()
         listener?.onResult(permissions)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        overridePendingTransition(0, 0)
+        overridePendingTransition(R.anim.permissions, R.anim.permissions)
         super.onCreate(savedInstanceState)
         intent.getStringArrayExtra(ExtraCode.PERMISSIONS)?.let {
             permissionsResult.launch(it)
@@ -45,13 +37,11 @@ class PermissionsActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(0, 0)
+        overridePendingTransition(R.anim.permissions, R.anim.permissions)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        LogD("onDestroy Before $listener")
         listener = null
-        LogD("onDestroy After $listener")
     }
 }

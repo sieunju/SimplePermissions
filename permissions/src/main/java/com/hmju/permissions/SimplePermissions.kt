@@ -3,14 +3,13 @@ package com.hmju.permissions
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.annotation.IntRange
 import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import com.hmju.permissions.model.PermissionsDialogUiModel
-import com.hmju.permissions.model.PermissionsExtra
 import com.hmju.permissions.ui.PermissionsActivity
 import com.hmju.permissions.ui.PermissionsDialog
 
@@ -20,16 +19,6 @@ import com.hmju.permissions.ui.PermissionsDialog
  * Created by hmju on 2021-10-25
  */
 class SimplePermissions(private val context: Context) {
-
-    companion object {
-        private const val TAG = "SimplePermissions"
-        private const val DEBUG = true
-        fun LogD(msg: String) {
-            if (DEBUG) {
-                Log.d(TAG, msg)
-            }
-        }
-    }
 
     private var requestPermissions: Array<String>? = null
     private var negativeDialogTitle: String? = null
@@ -148,7 +137,6 @@ class SimplePermissions(private val context: Context) {
                 context.startActivity(this)
             }
         } catch (ex: Exception) {
-            LogD("Error $ex")
         }
     }
 
@@ -157,56 +145,59 @@ class SimplePermissions(private val context: Context) {
      * @param callback {전부다 승인한 경우 true, 아닌경우 false}, 거부된 권한들
      */
     fun build(callback: (Boolean, Array<String>) -> Unit) {
-        if (requestPermissions == null) {
-            throw NullPointerException("권한은 필수 값입니다.")
-        }
+        if (requestPermissions == null) throw NullPointerException("권한은 필수 값입니다.")
 
-        if (context is Activity) {
-            Intent(context, PermissionsActivity::class.java).apply {
-                putExtra(ExtraCode.PERMISSIONS, requestPermissions)
-                context.startActivity(this)
-            }
-            val negativeList = ArrayList<String>()
-            PermissionsActivity.listener = object : PermissionsListener {
-                override fun onResult(permissions: Map<String, Boolean>) {
-                    LogD("Callback Result $permissions")
-                    for (key in permissions.keys) {
-                        if (permissions[key] == false) {
-                            negativeList.add(key)
+        // 권한 거부인것들만 권한 팝업 처리하도록
+        val negativePermissions = requestPermissions!!
+                .filter { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_DENIED }
+
+        if (negativePermissions.isEmpty()) {
+            callback(true, emptyArray())
+        } else {
+            if (context is Activity) {
+                Intent(context, PermissionsActivity::class.java).apply {
+                    putExtra(ExtraCode.PERMISSIONS, negativePermissions.toTypedArray())
+                    context.startActivity(this)
+                }
+                val negativeList = ArrayList<String>()
+                PermissionsActivity.listener = object : PermissionsListener {
+                    override fun onResult(permissions: Map<String, Boolean>) {
+                        for (key in permissions.keys) {
+                            if (permissions[key] == false) {
+                                negativeList.add(key)
+                            }
                         }
-                    }
-                    
-                    val isAllGranted = negativeList.size == 0
 
-                    // 모두 승인인 경우
-                    if(isAllGranted) {
-                        callback(isAllGranted, negativeList.toTypedArray())
-                    } else {
-                        // 권한 거부시 나타내는 팝업 제목 or 내용 둘중하나라도 값이 있는 경우
-                        if (!negativeDialogTitle.isNullOrEmpty() || !negativeDialogContents.isNullOrEmpty()) {
-                            PermissionsDialog(context, if (dialogConfig == null) PermissionsDialogUiModel() else dialogConfig!!)
-                                    .setTitle(negativeDialogTitle)
-                                    .setContents(negativeDialogContents)
-                                    .setNegativeButton(negativeDialogLeftButtonTxt)
-                                    .setPositiveButton(negativeDialogRightButtonTxt)
-                                    .show { which ->
-                                        if (negativeDialogPermissionsSettingWhich == -1) {
-                                            callback(isAllGranted, negativeList.toTypedArray())
-                                        } else if (which == negativeDialogPermissionsSettingWhich) {
-                                            callback(isAllGranted, negativeList.toTypedArray())
-                                            movePermissionsSetting(context)
-                                        } else {
-                                            callback(isAllGranted, negativeList.toTypedArray())
-                                        }
-                                    }
-                        } else {
+                        val isAllGranted = negativeList.size == 0
+
+                        // 모두 승인인 경우
+                        if (isAllGranted) {
                             callback(isAllGranted, negativeList.toTypedArray())
+                        } else {
+                            // 권한 거부시 나타내는 팝업 제목 or 내용 둘중하나라도 값이 있는 경우
+                            if (!negativeDialogTitle.isNullOrEmpty() || !negativeDialogContents.isNullOrEmpty()) {
+                                PermissionsDialog(context, if (dialogConfig == null) PermissionsDialogUiModel() else dialogConfig!!)
+                                        .setTitle(negativeDialogTitle)
+                                        .setContents(negativeDialogContents)
+                                        .setNegativeButton(negativeDialogLeftButtonTxt)
+                                        .setPositiveButton(negativeDialogRightButtonTxt)
+                                        .show { which ->
+                                            callback(isAllGranted, negativeList.toTypedArray())
+
+                                            // 권한 설정 페이지로 이동하는 경우
+                                            if (which == negativeDialogPermissionsSettingWhich) {
+                                                movePermissionsSetting(context)
+                                            }
+                                        }
+                            } else {
+                                callback(isAllGranted, negativeList.toTypedArray())
+                            }
                         }
                     }
                 }
+            } else {
+                throw IllegalArgumentException("Not Application Context.. Activity Context ")
             }
-        } else {
-            throw IllegalArgumentException("Not Application Context.. Activity Context ")
         }
     }
 }

@@ -28,8 +28,8 @@ import hmju.widget.view.CustomTextView
  * Created by hmju on 2021-10-25
  */
 class PermissionsDialog(
-	private val context: Context,
-	private val uiModel: PermissionsDialogUiModel
+    private val context: Context,
+    private val uiModel: PermissionsDialogUiModel
 ) {
 
     companion object {
@@ -56,9 +56,9 @@ class PermissionsDialog(
         if (!text.isNullOrEmpty()) {
             tvTitle.visibility = View.VISIBLE
             tvTitle.text = HtmlCompat.fromHtml(
-				text.replace("\n", "<br>"),
-				HtmlCompat.FROM_HTML_MODE_LEGACY
-			)
+                text.replace("\n", "<br>"),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         }
         return this
     }
@@ -71,9 +71,9 @@ class PermissionsDialog(
         if (!text.isNullOrEmpty()) {
             tvContents.visibility = View.VISIBLE
             tvContents.text = HtmlCompat.fromHtml(
-				text.replace("\n", "<br>"),
-				HtmlCompat.FROM_HTML_MODE_LEGACY
-			)
+                text.replace("\n", "<br>"),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         }
         return this
     }
@@ -86,9 +86,9 @@ class PermissionsDialog(
         if (!text.isNullOrEmpty()) {
             tvPositive.visibility = View.VISIBLE
             tvPositive.text = HtmlCompat.fromHtml(
-				text.replace("\n", "<br>"),
-				HtmlCompat.FROM_HTML_MODE_LEGACY
-			)
+                text.replace("\n", "<br>"),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         }
         return this
     }
@@ -101,9 +101,9 @@ class PermissionsDialog(
         if (!text.isNullOrEmpty()) {
             tvNegative.visibility = View.VISIBLE
             tvNegative.text = HtmlCompat.fromHtml(
-				text.replace("\n", "<br>"),
-				HtmlCompat.FROM_HTML_MODE_LEGACY
-			)
+                text.replace("\n", "<br>"),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
         }
         return this
     }
@@ -130,34 +130,34 @@ class PermissionsDialog(
         }
 
         tvNegative.updatePadding(
-			uiModel.buttonHorizontalPadding,
-			uiModel.buttonVerticalPadding,
-			uiModel.buttonHorizontalPadding,
-			uiModel.buttonVerticalPadding
-		)
+            uiModel.buttonHorizontalPadding,
+            uiModel.buttonVerticalPadding,
+            uiModel.buttonHorizontalPadding,
+            uiModel.buttonVerticalPadding
+        )
         tvNegative.setEnableTxtColor(getColor(uiModel.buttonNegativeTxtColor))
         tvNegative.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uiModel.buttonTxtSize.toFloat())
         tvNegative.setEnableDrawable(
-			getColor(uiModel.buttonNegativeBgColor),
-			uiModel.buttonCorner,
-			View.NO_ID,
-			View.NO_ID
-		)
+            getColor(uiModel.buttonNegativeBgColor),
+            uiModel.buttonCorner,
+            View.NO_ID,
+            View.NO_ID
+        )
 
         tvPositive.updatePadding(
-			uiModel.buttonHorizontalPadding,
-			uiModel.buttonVerticalPadding,
-			uiModel.buttonHorizontalPadding,
-			uiModel.buttonVerticalPadding
-		)
+            uiModel.buttonHorizontalPadding,
+            uiModel.buttonVerticalPadding,
+            uiModel.buttonHorizontalPadding,
+            uiModel.buttonVerticalPadding
+        )
         tvPositive.setEnableTxtColor(getColor(uiModel.buttonPositiveTxtColor))
         tvPositive.setTextSize(TypedValue.COMPLEX_UNIT_DIP, uiModel.buttonTxtSize.toFloat())
         tvPositive.setEnableDrawable(
-			getColor(uiModel.buttonPositiveBgColor),
-			uiModel.buttonCorner,
-			View.NO_ID,
-			View.NO_ID
-		)
+            getColor(uiModel.buttonPositiveBgColor),
+            uiModel.buttonCorner,
+            View.NO_ID,
+            View.NO_ID
+        )
     }
 
     /**
@@ -186,20 +186,22 @@ class PermissionsDialog(
         }
 
         dialog = builder.create().apply {
-            try {
-                if (uiModel.dialogBg == View.NO_ID) {
-                    window?.setBackgroundDrawable(GradientDrawable(
-						GradientDrawable.Orientation.BL_TR,
-						intArrayOf(Color.WHITE, Color.WHITE)
-					).apply {
-						cornerRadius = uiModel.dialogCorner.toFloat()
-					})
-                } else {
-                    window?.setBackgroundDrawableResource(uiModel.dialogBg)
-                }
-                show()
-            } catch (ex: WindowManager.BadTokenException) {
+            Handler(Looper.getMainLooper()).post {
+                try {
+                    if (uiModel.dialogBg == View.NO_ID) {
+                        window?.setBackgroundDrawable(GradientDrawable(
+                            GradientDrawable.Orientation.BL_TR,
+                            intArrayOf(Color.WHITE, Color.WHITE)
+                        ).apply {
+                            cornerRadius = uiModel.dialogCorner.toFloat()
+                        })
+                    } else {
+                        window?.setBackgroundDrawableResource(uiModel.dialogBg)
+                    }
+                    show()
+                } catch (ex: WindowManager.BadTokenException) {
 
+                }
             }
         }
     }
@@ -208,12 +210,10 @@ class PermissionsDialog(
      * Dialog Dismiss
      */
     fun dismiss() {
-        Handler(Looper.getMainLooper()).post {
-            try {
-                dialog.dismiss()
-            } catch (ex: Exception) {
+        try {
+            dialog.dismiss()
+        } catch (ex: Exception) {
 
-            }
         }
     }
 }
