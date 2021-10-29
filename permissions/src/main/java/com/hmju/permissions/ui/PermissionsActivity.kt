@@ -26,7 +26,7 @@ class PermissionsActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        overridePendingTransition(R.anim.permissions, R.anim.permissions)
+        overridePendingTransition(0, 0)
         super.onCreate(savedInstanceState)
         intent.getStringArrayExtra(ExtraCode.PERMISSIONS)?.let {
             permissionsResult.launch(it)
@@ -37,7 +37,7 @@ class PermissionsActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.permissions, R.anim.permissions)
+        overridePendingTransition(0, 0)
     }
 
     override fun onDestroy() {
