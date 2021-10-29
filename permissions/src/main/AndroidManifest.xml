@@ -6,8 +6,7 @@
 
         <activity
             android:name=".ui.PermissionsActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/TransparentTheme" />
+            android:launchMode="singleTask" />
 
     </application>
 </manifest>
