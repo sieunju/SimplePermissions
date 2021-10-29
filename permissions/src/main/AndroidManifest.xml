@@ -6,7 +6,9 @@
 
         <activity
             android:name=".ui.PermissionsActivity"
+            android:theme="@style/Theme.Transparent.SimplePermissions"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|fontScale"
+            android:screenOrientation="unspecified"
             android:launchMode="singleTask" />
 
     </application>
