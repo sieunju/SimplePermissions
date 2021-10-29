@@ -22,6 +22,7 @@ class PermissionsActivity : AppCompatActivity() {
             ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         finish()
+        overridePendingTransition(0, 0)
         listener?.onResult(permissions)
     }
 

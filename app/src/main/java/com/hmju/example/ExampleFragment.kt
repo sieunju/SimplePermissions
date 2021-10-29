@@ -1,6 +1,7 @@
 package com.hmju.example
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -25,10 +26,8 @@ class ExampleFragment : Fragment(R.layout.fragment_example) {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ).build { isAllGranted, negativePermissions ->
-                    Log.d(
-                        "Example",
-                        "모두 권한 승인 $isAllGranted\t거부된 권한 ${Arrays.deepToString(negativePermissions)}"
-                    )
+                    startActivity(Intent(requireContext(),ExampleActivity::class.java))
+                    requireActivity().finish()
                 }
         }
         view.findViewById<Button>(R.id.button3).setOnClickListener {
