@@ -12,7 +12,6 @@ android {
         targetSdkVersion 30
         versionCode 6
         versionName "0.0.6"
-        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -20,8 +19,7 @@ android {
             minifyEnabled false
         }
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled false
         }
     }
     compileOptions {
