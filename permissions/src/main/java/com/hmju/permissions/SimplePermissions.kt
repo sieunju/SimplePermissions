@@ -36,12 +36,6 @@ class SimplePermissions(private val context: Context) {
         return this
     }
 
-    private fun initDialogConfig() {
-        if (dialogConfig == null) {
-            dialogConfig = PermissionsDialogUiModel()
-        }
-    }
-
     /**
      * 권한 거부시 나타내는 팝업 제목 설정
      * @param id String Resource Id
@@ -124,14 +118,22 @@ class SimplePermissions(private val context: Context) {
         return this
     }
 
-    fun negativeDialogPermissionsSetting(@IntRange(from = 1, to = 2) which: Int): SimplePermissions {
+    fun negativeDialogPermissionsSetting(
+        @IntRange(
+            from = 1,
+            to = 2
+        ) which: Int
+    ): SimplePermissions {
         negativeDialogPermissionsSettingWhich = which
         return this
     }
 
     private fun movePermissionsSetting(context: Context) {
         try {
-            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}")).apply {
+            Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:${context.packageName}")
+            ).apply {
                 addCategory(Intent.CATEGORY_DEFAULT)
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(this)
@@ -149,7 +151,12 @@ class SimplePermissions(private val context: Context) {
 
         // 권한 거부인것들만 권한 팝업 처리하도록
         val negativePermissions = requestPermissions!!
-                .filter { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_DENIED }
+            .filter {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    it
+                ) == PackageManager.PERMISSION_DENIED
+            }
 
         if (negativePermissions.isEmpty()) {
             callback(true, emptyArray())
@@ -176,19 +183,22 @@ class SimplePermissions(private val context: Context) {
                         } else {
                             // 권한 거부시 나타내는 팝업 제목 or 내용 둘중하나라도 값이 있는 경우
                             if (!negativeDialogTitle.isNullOrEmpty() || !negativeDialogContents.isNullOrEmpty()) {
-                                PermissionsDialog(context, if (dialogConfig == null) PermissionsDialogUiModel() else dialogConfig!!)
-                                        .setTitle(negativeDialogTitle)
-                                        .setContents(negativeDialogContents)
-                                        .setNegativeButton(negativeDialogLeftButtonTxt)
-                                        .setPositiveButton(negativeDialogRightButtonTxt)
-                                        .show { which ->
-                                            callback(isAllGranted, negativeList.toTypedArray())
+                                PermissionsDialog(
+                                    context,
+                                    if (dialogConfig == null) PermissionsDialogUiModel() else dialogConfig!!
+                                )
+                                    .setTitle(negativeDialogTitle)
+                                    .setContents(negativeDialogContents)
+                                    .setNegativeButton(negativeDialogLeftButtonTxt)
+                                    .setPositiveButton(negativeDialogRightButtonTxt)
+                                    .show { which ->
+                                        callback(isAllGranted, negativeList.toTypedArray())
 
-                                            // 권한 설정 페이지로 이동하는 경우
-                                            if (which == negativeDialogPermissionsSettingWhich) {
-                                                movePermissionsSetting(context)
-                                            }
+                                        // 권한 설정 페이지로 이동하는 경우
+                                        if (which == negativeDialogPermissionsSettingWhich) {
+                                            movePermissionsSetting(context)
                                         }
+                                    }
                             } else {
                                 callback(isAllGranted, negativeList.toTypedArray())
                             }

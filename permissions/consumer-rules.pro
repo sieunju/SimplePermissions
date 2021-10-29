@@ -1,0 +1,3 @@
+-keepattributes SourceFile,LineNumberTable
+-keep class com.hmju.permissions.model.PermissionsDialogUiModel { *; }
+-keepclassmembers class com.hmju.permissions.model.PermissionsDialogUiModel { *; }
