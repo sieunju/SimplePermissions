@@ -10,6 +10,7 @@ import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -198,6 +199,7 @@ class PermissionsDialog(
                     } else {
                         window?.setBackgroundDrawableResource(uiModel.dialogBg)
                     }
+                    requestWindowFeature(Window.FEATURE_NO_TITLE)
                     show()
                 } catch (ex: WindowManager.BadTokenException) {
 

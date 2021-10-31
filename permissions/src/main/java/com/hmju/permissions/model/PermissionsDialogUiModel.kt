@@ -1,17 +1,21 @@
 package com.hmju.permissions.model
 
+import android.os.Parcelable
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.hmju.permissions.R
 import com.hmju.permissions.extension.dp
+import kotlinx.parcelize.Parcelize
 
 /**
  * Description : 권한 거부시 나타내는 팝업 데이터 모델 클래스
  *
  * Created by hmju on 2021-10-26
  */
+
+@Parcelize
 data class PermissionsDialogUiModel(
 		var titleTopMargin: Int = 20.dp,
 		var titleSideMargin: Int = 20.dp,
@@ -32,4 +36,4 @@ data class PermissionsDialogUiModel(
 		@ColorRes var buttonNegativeBgColor: Int = android.R.color.darker_gray,
 		@ColorRes var buttonPositiveTxtColor: Int = android.R.color.white,
 		@ColorRes var buttonPositiveBgColor: Int = android.R.color.holo_blue_dark
-)
+) : Parcelable

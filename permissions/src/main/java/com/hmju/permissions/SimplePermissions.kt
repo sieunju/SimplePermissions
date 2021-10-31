@@ -4,11 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.provider.Settings
 import androidx.annotation.IntRange
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import com.hmju.permissions.model.PermissionsDialogModel
 import com.hmju.permissions.model.PermissionsDialogUiModel
 import com.hmju.permissions.ui.PermissionsActivity
 import com.hmju.permissions.ui.PermissionsDialog
@@ -20,14 +19,18 @@ import com.hmju.permissions.ui.PermissionsDialog
  */
 class SimplePermissions(private val context: Context) {
 
-    private var requestPermissions: Array<String>? = null
-    private var negativeDialogTitle: String? = null
-    private var negativeDialogContents: String? = null
-    private var negativeDialogLeftButtonTxt: String? = null
-    private var negativeDialogRightButtonTxt: String? = null
-    private var negativeDialogPermissionsSettingWhich: Int = -1
+    companion object {
+        internal var listener: PermissionsListener? = null
 
-    private var dialogConfig: PermissionsDialogUiModel? = null
+        fun testFun() {
+
+        }
+    }
+
+    private var requestPermissions: Array<String>? = null
+
+    private var dialogModel: PermissionsDialogModel? = null
+    private var dialogUiModel: PermissionsDialogUiModel? = null
 
     fun requestPermissions(vararg permissions: String): SimplePermissions {
         this.requestPermissions = Array(permissions.size) { idx ->
@@ -50,7 +53,7 @@ class SimplePermissions(private val context: Context) {
      * @param text 문자열
      */
     fun negativeDialogTitle(text: String): SimplePermissions {
-        negativeDialogTitle = text
+        initDialogConfig().title = text
         return this
     }
 
@@ -69,7 +72,7 @@ class SimplePermissions(private val context: Context) {
      * @param text 문자열
      */
     fun negativeDialogContents(text: String): SimplePermissions {
-        negativeDialogContents = text
+        initDialogConfig().contents = text
         return this
     }
 
@@ -87,7 +90,7 @@ class SimplePermissions(private val context: Context) {
      * @param text 문자열
      */
     fun negativeDialogLeftButton(text: String): SimplePermissions {
-        negativeDialogLeftButtonTxt = text
+        initDialogConfig().leftButton = text
         return this
     }
 
@@ -105,7 +108,7 @@ class SimplePermissions(private val context: Context) {
      * @param text 문자열
      */
     fun negativeDialogRightButton(text: String): SimplePermissions {
-        negativeDialogRightButtonTxt = text
+        initDialogConfig().rightButton = text
         return this
     }
 
@@ -114,32 +117,40 @@ class SimplePermissions(private val context: Context) {
      * @param config PermissionsDialogUiModel
      */
     fun negativeDialogUiConfig(config: PermissionsDialogUiModel): SimplePermissions {
-        dialogConfig = config
+        dialogUiModel = config
         return this
     }
 
+    /**
+     * 권한 페이지 이동시 필요한 버튼 위치
+     * 왼쪽 오른쪽 버튼
+     */
+    @Deprecated(
+        message = "권한 페이지에서 허용 -> 거부 상태를 하면 리스너가 " +
+                "Null 로 변경이 되므로 권한 설정 페이지는 라이브러리에서 처리하는 것이 아닌 외부에서 직접적으로 " +
+                "처리해야 합니다.", level = DeprecationLevel.ERROR
+    )
     fun negativeDialogPermissionsSetting(
         @IntRange(
             from = 1,
             to = 2
         ) which: Int
     ): SimplePermissions {
-        negativeDialogPermissionsSettingWhich = which
+        initDialogConfig().apply {
+            isSettingWhich = which
+            packageName = context.packageName
+        }
         return this
     }
 
-    private fun movePermissionsSetting(context: Context) {
-        try {
-            Intent(
-                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.parse("package:${context.packageName}")
-            ).apply {
-                addCategory(Intent.CATEGORY_DEFAULT)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                context.startActivity(this)
-            }
-        } catch (ex: Exception) {
+    /**
+     * Dialog Config Getter.
+     */
+    private fun initDialogConfig(): PermissionsDialogModel {
+        if (dialogModel == null) {
+            dialogModel = PermissionsDialogModel()
         }
+        return dialogModel!!
     }
 
     /**
@@ -166,42 +177,36 @@ class SimplePermissions(private val context: Context) {
                     putExtra(ExtraCode.PERMISSIONS, negativePermissions.toTypedArray())
                     context.startActivity(this)
                 }
-                val negativeList = ArrayList<String>()
-                PermissionsActivity.listener = object : PermissionsListener {
-                    override fun onResult(permissions: Map<String, Boolean>) {
-                        for (key in permissions.keys) {
-                            if (permissions[key] == false) {
-                                negativeList.add(key)
-                            }
+
+                // Single Listener
+                if (listener != null) listener = null
+
+                listener = object : PermissionsListener {
+                    override fun onResult() {
+                        val resultNegativePermissions = requestPermissions!!.filter {
+                            ContextCompat.checkSelfPermission(
+                                context,
+                                it
+                            ) == PackageManager.PERMISSION_DENIED
                         }
 
-                        val isAllGranted = negativeList.size == 0
-
-                        // 모두 승인인 경우
-                        if (isAllGranted) {
-                            callback(isAllGranted, negativeList.toTypedArray())
+                        if (dialogModel == null) {
+                            callback(
+                                resultNegativePermissions.isEmpty(),
+                                resultNegativePermissions.toTypedArray()
+                            )
                         } else {
-                            // 권한 거부시 나타내는 팝업 제목 or 내용 둘중하나라도 값이 있는 경우
-                            if (!negativeDialogTitle.isNullOrEmpty() || !negativeDialogContents.isNullOrEmpty()) {
-                                PermissionsDialog(
-                                    context,
-                                    if (dialogConfig == null) PermissionsDialogUiModel() else dialogConfig!!
-                                )
-                                    .setTitle(negativeDialogTitle)
-                                    .setContents(negativeDialogContents)
-                                    .setNegativeButton(negativeDialogLeftButtonTxt)
-                                    .setPositiveButton(negativeDialogRightButtonTxt)
-                                    .show { which ->
-                                        callback(isAllGranted, negativeList.toTypedArray())
-
-                                        // 권한 설정 페이지로 이동하는 경우
-                                        if (which == negativeDialogPermissionsSettingWhich) {
-                                            movePermissionsSetting(context)
-                                        }
-                                    }
-                            } else {
-                                callback(isAllGranted, negativeList.toTypedArray())
-                            }
+                            PermissionsDialog(context, dialogUiModel ?: PermissionsDialogUiModel())
+                                .setTitle(dialogModel?.title)
+                                .setContents(dialogModel?.contents)
+                                .setNegativeButton(dialogModel?.leftButton)
+                                .setPositiveButton(dialogModel?.rightButton)
+                                .show {
+                                    callback(
+                                        resultNegativePermissions.isEmpty(),
+                                        resultNegativePermissions.toTypedArray()
+                                    )
+                                }
                         }
                     }
                 }

@@ -8,7 +8,6 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.hmju.permissions.SimplePermissions
 import com.hmju.permissions.model.PermissionsDialogUiModel
-import com.hmju.permissions.ui.PermissionsDialog
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -31,9 +30,8 @@ class MainActivity : AppCompatActivity() {
                             buttonPositiveBgColor = R.color.pink,
                             buttonNegativeBgColor = R.color.gray
                     ))
-                    .negativeDialogPermissionsSetting(PermissionsDialog.POSITIVE)
                     .build { isAllGranted, negativePermissions ->
-                        Log.d("Example", "모두 권한 승인 $isAllGranted\t거부된 권한 ${Arrays.deepToString(negativePermissions)}")
+                        Log.d("JLogger", "모두 권한 승인 $isAllGranted\t거부된 권한 ${Arrays.deepToString(negativePermissions)}")
                     }
         }
 

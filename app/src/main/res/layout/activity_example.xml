@@ -7,4 +7,17 @@
     android:id="@+id/fragment"
     tools:context=".ExampleActivity">
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="권한 버튼 클릭" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 </FrameLayout>
