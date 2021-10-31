@@ -1,5 +1,6 @@
 > [![](https://jitpack.io/v/sieunju/SimplePermissions.svg)](https://jitpack.io/#sieunju/SimplePermissions)   
 > 권한 API가 AppCompat 1.3.0 이후로 변경이 되면서 그에 맞게 궈한 라이브러리를 만들었습니다.   
+> A newer version of com.github.sieunju:SimplePermissions than 0.0.1 is available: 0.0.11 문구가 노출되면 그냥 무시해주시길 바랍니다.. :) 배포 테스트 하다가 버전이 엄청 올라갔습니다..   😭😭😭
 
 ---
 
