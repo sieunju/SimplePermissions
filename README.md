@@ -43,8 +43,6 @@
             - negativeDialogUiConfig(config: PermissionsDialogUiModel)
                 - 권한 거부시 나타내는 팝업에 대한 Ui 설정   
                 ___PermissionsDialogUiModel 기본값 참고___
-            - negativeDialogPermissionsSetting(which: Int)
-                - 권한 거부시 앱 정보 페이지로 이동처리하는 함수   
             
     - *example*
         ~~~
