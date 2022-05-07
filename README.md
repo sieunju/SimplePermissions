@@ -5,25 +5,38 @@
 ![AndroidMinSdkVersion](https://img.shields.io/badge/minSdkVersion-21-green.svg) ![AndroidTargetSdkVersion](https://img.shields.io/badge/targetSdkVersion-31-brightgreen.svg)
 
 #### 라이브러리 추가 하는 방법
-    - *Project Gradle*
-    ~~~
-    allprojects {
+*Project Gradle*   
+```groovy
+allprojects {
 	    repositories {
 		    ...
 		    maven { url 'https://jitpack.io' }
 	    }
+}
+```
+    
+- App Module Gradle
+
+```groovy
+dependencies {
+    	implementation 'com.github.sieunju:permissions:$latestVersion'
+}
+```
+
+## 유의사항
+- 혹시나 머티리얼을 사용하시거나 프로젝트에 사용중인 라이브러리랑 충돌이 일어나는 경우에는 아래와 같이 사용해주시면 됩니다. 🙇‍♂️
+- A.K.A exclude
+```groovy
+
+implementation("com.github.sieunju:permissions:$lateversion") {
+        exclude("com.google.android.material")
+        exclude("androidx.appcompat:appcompat")
+        exclude("androidx.constraintlayout")
     }
-    ~~~
-    - *App Module Gradle*   
-    Latest Versions [![](https://jitpack.io/v/sieunju/SimplePermissions.svg)](https://jitpack.io/#sieunju/SimplePermissions)
-    ~~~
-    dependencies {
-    	implementation 'com.github.sieunju:SimplePermissions:$version'
-    }
-    ~~~
+```
  
 #### 사용 예
-    - *간단 설명*
+   - *간단 설명*
         - builder 패턴으로 구성되어 있고, 요청한 권한 중 거부를 선택한 로직을 리턴합니다.
         - 함수
             - requestPermissions(vararg permissions: String)
@@ -40,7 +53,7 @@
                 - 권한 거부시 나타내는 팝업에 대한 Ui 설정   
                 ___PermissionsDialogUiModel 기본값 참고___
             
-    - *example*
+   - *example*
         ~~~
         SimplePermissions(this)
             .requestPermissions(
