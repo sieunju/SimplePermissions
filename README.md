@@ -1,13 +1,10 @@
 > [![](https://jitpack.io/v/sieunju/SimplePermissions.svg)](https://jitpack.io/#sieunju/SimplePermissions)   
-> 권한 API가 AppCompat 1.3.0 이후로 변경이 되면서 그에 맞게 궈한 라이브러리를 만들었습니다.   
+> 권한 API가 AppCompat 1.3.0 이후로 변경이 되면서 그에 맞게 권한 라이브러리를 만들었습니다.   
 ---
 
+![AndroidMinSdkVersion](https://img.shields.io/badge/minSdkVersion-21-green.svg) ![AndroidTargetSdkVersion](https://img.shields.io/badge/targetSdkVersion-31-brightgreen.svg)
 
-1. #### 사양
-    - Min SDK Version 21
-    - Target SDK Version 30
-
-2. #### 라이브러리 추가 하는 방법
+#### 라이브러리 추가 하는 방법
     - *Project Gradle*
     ~~~
     allprojects {
@@ -24,8 +21,8 @@
     	implementation 'com.github.sieunju:SimplePermissions:$version'
     }
     ~~~
-
-3. #### 사용 예
+ 
+#### 사용 예
     - *간단 설명*
         - builder 패턴으로 구성되어 있고, 요청한 권한 중 거부를 선택한 로직을 리턴합니다.
         - 함수
