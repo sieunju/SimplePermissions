@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -28,10 +27,4 @@
             android:text="Fragment" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <FrameLayout
-        android:id="@+id/childFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

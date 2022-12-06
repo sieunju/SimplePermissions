@@ -1,8 +1,0 @@
-Version: 1.0.1-beta02
-Title: 1.0.1 베타 버전 배포입니다.
-Message:
-## 소개
-> AppCompat 1.3.0 이후 권한 API 변경되면서 그에 맞는 간단한 권한 전용 라이브러리 입니다.
-
-## 이슈를 수정했어요.
-- build.gradle 업데이트 했어요.
