@@ -1,3 +1,4 @@
-include ':permissions'
-include ':app'
 rootProject.name = "Permissions"
+include ':app'
+include ':core'
+include ':dialog'
