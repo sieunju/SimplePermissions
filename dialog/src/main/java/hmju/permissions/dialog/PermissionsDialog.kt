@@ -188,7 +188,7 @@ class PermissionsDialog(
         }
 
         dialog = builder.create().apply {
-            Handler(Looper.getMainLooper()).postDelayed({
+            Handler(Looper.getMainLooper()).post {
                 try {
                     if (uiModel.dialogBg == View.NO_ID) {
                         window?.setBackgroundDrawable(GradientDrawable(
@@ -203,9 +203,9 @@ class PermissionsDialog(
                     requestWindowFeature(Window.FEATURE_NO_TITLE)
                     show()
                 } catch (ex: WindowManager.BadTokenException) {
-                    Log.d("JLOGGER","ERROR ${context} $ex")
+                    Log.d("JLOGGER", "ERROR ${context} $ex")
                 }
-            },0)
+            }
         }
     }
 
