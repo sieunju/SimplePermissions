@@ -6,8 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.hmju.permissions.SimplePermissions
-import com.hmju.permissions.model.PermissionsDialogUiModel
+import hmju.permissions.core.SPermissions
+import hmju.permissions.dialog.SimplePermissions
+import hmju.permissions.dialog.model.PermissionsDialogUiModel
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -37,6 +38,16 @@ class MainActivity : AppCompatActivity() {
                         "모두 권한 승인 $isAllGranted\t거부된 권한 ${Arrays.deepToString(negativePermissions)}"
                     )
                 }
+        }
+
+        findViewById<Button>(R.id.button2).setOnClickListener {
+            SPermissions(this)
+                .requestPermissions(
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.BLUETOOTH
+                ).build { b, strings -> }
         }
 
         findViewById<Button>(R.id.button3).setOnClickListener {

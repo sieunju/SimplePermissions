@@ -4,13 +4,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "31.0.0"
+    compileSdkVersion buildVersions.compileSdk
 
     defaultConfig {
         applicationId "com.hmju.example"
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion buildVersions.minSdk
+        targetSdkVersion buildVersions.targetSdk
         versionCode 1
         versionName "1.0"
 
@@ -37,7 +36,8 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':permissions')
+    implementation project(path: ':dialog')
+    implementation project(path: ':core')
     // implementation("com.github.sieunju:SimplePermissions:1.0.1-beta01")
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'

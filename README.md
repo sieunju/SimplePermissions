@@ -19,7 +19,7 @@ allprojects {
 
 ```groovy
 dependencies {
-    	implementation 'com.github.sieunju:permissions:$latestVersion'
+    	implementation 'com.github.sieunju:SimplePermissions:$latestVersion'
 }
 ```
 
@@ -28,7 +28,7 @@ dependencies {
 - A.K.A exclude
 ```groovy
 
-implementation("com.github.sieunju:permissions:$lateversion") {
+implementation("com.github.sieunju:SimplePermissions:$lateversion") {
         exclude("com.google.android.material")
         exclude("androidx.appcompat:appcompat")
         exclude("androidx.constraintlayout")

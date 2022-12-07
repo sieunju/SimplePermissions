@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="hmju.permissions.core">
+
+    <application>
+        <activity
+            android:name=".internal.PermissionsActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|fontScale"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="unspecified"
+            android:theme="@style/Theme.Transparent.SPermissions" />
+
+    </application>
+
+</manifest>
