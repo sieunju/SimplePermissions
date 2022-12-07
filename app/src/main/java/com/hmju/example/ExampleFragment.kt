@@ -13,7 +13,7 @@ import hmju.permissions.core.SPermissions
  *
  * Created by hmju on 2021-10-27
  */
-class ExampleFragment : Fragment(R.layout.fragment_example) {
+internal class ExampleFragment : Fragment(R.layout.fragment_example) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

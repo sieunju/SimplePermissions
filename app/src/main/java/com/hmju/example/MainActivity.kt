@@ -11,7 +11,7 @@ import hmju.permissions.dialog.SimplePermissions
 import hmju.permissions.dialog.model.PermissionsDialogUiModel
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+internal class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
