@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import hmju.permissions.core.ExtraCode
 import hmju.permissions.core.SPermissions
 
 /**

@@ -1,7 +1,5 @@
-package hmju.permissions.core
+package hmju.permissions.core.internal
 
 internal object ExtraCode {
     const val PERMISSIONS = "a"
-    const val NEGATIVE_DIALOG = "b"
-    const val NEGATIVE_UI_DIALOG = "c"
 }
