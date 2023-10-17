@@ -37,7 +37,7 @@ dependencies {
     implementation(deps.androidx.appCompat)
     implementation(deps.androidx.constraintLayout)
 
-    implementation("com.github.sieunju:widget:1.0.3-beta01") {
+    implementation("com.github.sieunju.widget:view:1.0.8") {
         exclude group: "com.google.android.material"
     }
 
