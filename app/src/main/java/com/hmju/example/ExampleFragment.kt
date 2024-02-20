@@ -19,11 +19,10 @@ internal class ExampleFragment : Fragment(R.layout.fragment_example) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<Button>(R.id.button1).setOnClickListener {
             SPermissions(requireContext())
-                .requestPermissions(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).build { isAllGranted, negativePermissions ->
+                .addPermission(Manifest.permission.CAMERA)
+                .addPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .addPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .build { isAllGranted, negativePermissions ->
                     startActivity(Intent(requireContext(), ExampleActivity::class.java))
                     requireActivity().finish()
                 }

@@ -10,7 +10,6 @@
 ```groovy
 allprojects {
 	    repositories {
-		    ...
 		    maven { url 'https://jitpack.io' }
 	    }
 }
@@ -58,30 +57,15 @@ implementation("com.github.sieunju.SimplePermissions:dialog:$lateversion") {
               ___PermissionsDialogUiModel 기본값 참고___
 
 - *example*
-     ~~~
+     ~~~kotlin
      SPermissions(this) // Context, Activity, Fragment 지원합니다.
-     .requestPermissions(
-             Manifest.permission.READ_PHONE_STATE,
-             Manifest.permission.CAMERA,
-             Manifest.permission.RECORD_AUDIO,
-             Manifest.permission.BLUETOOTH
-         )
-         .build { isAllGranted, negativePermissions ->
+        .addPermission(Manifest.permission.READ_PHONE_STATE)
+        .addPermission(Manifest.permission.CAMERA)
+        .addPermission(Manifest.permission.RECORD_AUDIO)
+        .build { isAllGranted, resultPermissionMap ->
              // isAllGranted -> 모든 권한이 승인된 상태 유무
-             // negativePermissions -> 권한 거부된 권한 리스트
-         }
-     
-     SimplePermissions(this)
-         .requestPermissions(
-             Manifest.permission.READ_PHONE_STATE,
-             Manifest.permission.CAMERA,
-             Manifest.permission.RECORD_AUDIO,
-             Manifest.permission.BLUETOOTH
-         )
-         .build { isAllGranted, negativePermissions ->
-             // isAllGranted -> 모든 권한이 승인된 상태 유무
-             // negativePermissions -> 권한 거부된 권한 리스트
-         }
+             // resultPermissionMap -> 요청한 권한 결과 값
+        }
      ~~~
     - 권한 거부시 나타내는 팝업을 꽉찬 화면의 양쪽 여백을 고정으로 주고 싶을때
      ~~~

@@ -3,7 +3,6 @@ package hmju.permissions.dialog
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.annotation.IntRange
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,10 +25,13 @@ class SimplePermissions : SPermissions {
     private var dialogModel: PermissionsDialogModel? = null
     private var dialogUiModel: PermissionsDialogUiModel? = null
 
-    override fun requestPermissions(vararg permissions: String): SimplePermissions {
-        this.requestPermissions = Array(permissions.size) { idx ->
-            permissions[idx]
-        }
+    override fun addPermissions(permissions: List<String>): SimplePermissions {
+        requestPermissions.addAll(permissions)
+        return this
+    }
+
+    override fun addPermission(permission: String): SimplePermissions {
+        requestPermissions.add(permission)
         return this
     }
 
@@ -116,28 +118,6 @@ class SimplePermissions : SPermissions {
     }
 
     /**
-     * 권한 페이지 이동시 필요한 버튼 위치
-     * 왼쪽 오른쪽 버튼
-     */
-    @Deprecated(
-        message = "권한 페이지에서 허용 -> 거부 상태를 하면 리스너가 " +
-                "Null 로 변경이 되므로 권한 설정 페이지는 라이브러리에서 처리하는 것이 아닌 외부에서 직접적으로 " +
-                "처리해야 합니다.", level = DeprecationLevel.ERROR
-    )
-    fun negativeDialogPermissionsSetting(
-        @IntRange(
-            from = 1,
-            to = 2
-        ) which: Int
-    ): SimplePermissions {
-        initDialogConfig().apply {
-            isSettingWhich = which
-            packageName = context.packageName
-        }
-        return this
-    }
-
-    /**
      * Dialog Config Getter.
      */
     private fun initDialogConfig(): PermissionsDialogModel {
@@ -149,13 +129,12 @@ class SimplePermissions : SPermissions {
 
     /**
      * Build
-     * @param callback {전부다 승인한 경우 true, 아닌경우 false}, 거부된 권한들
+     * @param callback {전부다 승인한 경우 true, 아닌경우 false}, 요청한 권한에 대한 결과 값
      */
-    override fun build(callback: (Boolean, Array<String>) -> Unit) {
-        if (requestPermissions == null) throw NullPointerException("권한은 필수 값입니다.")
-
+    override fun build(callback: (Boolean, Map<String, Boolean>) -> Unit) {
+        if (requestPermissions.isEmpty()) throw NullPointerException("권한은 필수 값입니다.")
         // 권한 거부인것들만 권한 팝업 처리하도록
-        val negativePermissions = requestPermissions!!
+        val negativePermissions = requestPermissions
             .filter {
                 ContextCompat.checkSelfPermission(
                     context,
@@ -164,22 +143,29 @@ class SimplePermissions : SPermissions {
             }
 
         if (negativePermissions.isEmpty()) {
-            callback(true, emptyArray())
+            callback(true, mapOf())
         } else {
             movePermissionsActivity(negativePermissions)
 
             buildAndSetListener {
-                val resultNegativePermissions = requestPermissions!!.filter {
-                    ContextCompat.checkSelfPermission(
+                val resultPermissionMap = hashMapOf<String, Boolean>()
+                var isAllGrated = true
+                requestPermissions.forEach { permission ->
+                    val permissionGranted = ContextCompat.checkSelfPermission(
                         context,
-                        it
-                    ) == PackageManager.PERMISSION_DENIED
+                        permission
+                    ) == PackageManager.PERMISSION_GRANTED
+                    resultPermissionMap[permission] = permissionGranted
+                    // 하나라도 거부된 경우
+                    if (!permissionGranted) {
+                        isAllGrated = false
+                    }
                 }
 
                 if (dialogModel == null) {
                     callback(
-                        resultNegativePermissions.isEmpty(),
-                        resultNegativePermissions.toTypedArray()
+                        isAllGrated,
+                        resultPermissionMap
                     )
                 } else {
                     PermissionsDialog(context, dialogUiModel ?: PermissionsDialogUiModel())
@@ -189,8 +175,8 @@ class SimplePermissions : SPermissions {
                         .setPositiveButton(dialogModel?.rightButton)
                         .show {
                             callback(
-                                resultNegativePermissions.isEmpty(),
-                                resultNegativePermissions.toTypedArray()
+                                isAllGrated,
+                                resultPermissionMap
                             )
                         }
                 }

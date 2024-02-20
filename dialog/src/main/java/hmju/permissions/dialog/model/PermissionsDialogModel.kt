@@ -10,6 +10,6 @@ data class PermissionsDialogModel(
     var contents: String? = null,
     var leftButton: String? = null,
     var rightButton: String? = null,
-    var isSettingWhich: Int = -1,
+    var isSettingWhich: Int = 1,
     var packageName : String? = null
 )
