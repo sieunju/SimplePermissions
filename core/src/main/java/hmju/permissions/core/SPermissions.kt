@@ -35,16 +35,19 @@ open class SPermissions {
         internal var listener: PermissionsListener? = null
     }
 
-    protected var requestPermissions: Array<String>? = null
+    protected val requestPermissions: MutableSet<String> = mutableSetOf()
+
+    open fun addPermission(permission: String): SPermissions {
+        requestPermissions.add(permission)
+        return this
+    }
 
     /**
      * Request Permissions
      * @param permissions Manifest.CAMERA, Manifest.STORAGE ...
      */
-    open fun requestPermissions(vararg permissions: String): SPermissions {
-        this.requestPermissions = Array(permissions.size) { idx ->
-            permissions[idx]
-        }
+    open fun addPermissions(permissions: List<String>): SPermissions {
+        requestPermissions.addAll(permissions)
         return this
     }
 
@@ -76,13 +79,13 @@ open class SPermissions {
 
     /**
      * Build
-     * @param callback {전부다 승인한 경우 true, 아닌경우 false}, 거부된 권한들
+     * @param callback {전부다 승인한 경우 true, 아닌경우 false}, 요청한 권한에 대한 결과 값
      */
-    open fun build(callback: (Boolean, Array<String>) -> Unit) {
-        if (requestPermissions == null) throw NullPointerException("권한은 필수 값입니다.")
+    open fun build(callback: (Boolean, Map<String, Boolean>) -> Unit) {
+        if (requestPermissions.isEmpty()) throw NullPointerException("권한은 필수 값입니다.")
 
         // 권한 거부인것들만 권한 팝업 처리하도록
-        val negativePermissions = requestPermissions!!
+        val negativePermissions = requestPermissions
             .filter {
                 ContextCompat.checkSelfPermission(
                     context,
@@ -91,7 +94,7 @@ open class SPermissions {
             }
 
         if (negativePermissions.isEmpty()) {
-            callback(true, emptyArray())
+            callback(true, mapOf())
         } else {
             movePermissionsActivity(negativePermissions)
 
@@ -100,17 +103,25 @@ open class SPermissions {
 
             listener = object : PermissionsListener {
                 override fun onResult() {
-                    val resultNegativePermissions = requestPermissions!!.filter {
-                        ContextCompat.checkSelfPermission(
+                    val resultPermissions = hashMapOf<String, Boolean>()
+                    var isAllGrated = true
+                    requestPermissions.forEach { permission ->
+                        val permissionGranted = ContextCompat.checkSelfPermission(
                             context,
-                            it
-                        ) == PackageManager.PERMISSION_DENIED
+                            permission
+                        ) == PackageManager.PERMISSION_GRANTED
+                        resultPermissions[permission] = permissionGranted
+                        // 하나라도 거부된 경우
+                        if (!permissionGranted) {
+                            isAllGrated = false
+                        }
                     }
 
                     callback(
-                        resultNegativePermissions.isEmpty(),
-                        resultNegativePermissions.toTypedArray()
+                        isAllGrated,
+                        resultPermissions
                     )
+                    listener = null
                 }
             }
         }
